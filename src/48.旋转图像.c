@@ -54,8 +54,8 @@
  * 
  * matrix.length == n
  * matrix[i].length == n
- * 1 
- * -1000 
+ * 1 <= n <= 20 
+ * -1000 <= matrix[i][j] <= 1000 
  * 
  * 
  */
@@ -71,7 +71,7 @@
 
 /**
  * @param {int**} matrix 要旋转的矩阵(二维数组)
- * @param {int} matrixSize 矩阵大小
+ * @param {int} matrixSize 矩阵行数
  * @param {int*} matrixColSize 矩阵列宽
  * @return {*}
  */
