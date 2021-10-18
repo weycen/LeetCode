@@ -92,7 +92,8 @@ char* longestCommonPrefix(char** strs, int strsSize) {
 
     /* 逐字符对比 */
     for (uint8_t j = 0; j < lcp_len; j++) {
-      if (((lcp[j] == '\0') || (strs[i][j] == '\0')) || (strs[i][j] != lcp[j])) {
+      /* 退出条件为搜索到字符串尾部或遇到不匹配字符，二者前后顺序可能会影响性能 */
+      if ((strs[i][j] == '\0') || (strs[i][j] != lcp[j])) {
         /**
          * 如果本次找到的公共串长度较之前记录更小，则更新lcp_len
          * note: 新找到的公共串不可能长于前面记录
