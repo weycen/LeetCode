@@ -70,6 +70,13 @@
 
 #define DEBUG_ENABLE 0
 
+/**
+ * 朴素字符串匹配法(native-string-matcher)实现strstr()
+ *
+ * @param {char*} haystack 给定主字符串
+ * @param {char*} needle 给定子字符串
+ * @return {*} 返回子串在主串中第一次出现的位置，不存在则返回-1
+ */
 int strStr(char* haystack, char* needle) {
 #if DEBUG_ENABLE
   printf("\nhaystack: %s \n", haystack);
@@ -78,34 +85,48 @@ int strStr(char* haystack, char* needle) {
 
   /* 当 needle 是空字符串时我们应当返回 0 */
   if (needle[0] == '\0') {
-    return 0;
+    return (0);
   }
 
-  uint16_t haystack_len = strlen(haystack);
-  uint16_t needle_len   = strlen(needle);
-
-  /* 如果不存在，则返回  -1 */
-  int index = -1;
+  uint16_t haystack_len   = strlen(haystack);
+  uint16_t needle_len     = strlen(needle);
+  uint16_t haystcak_index = 0, needle_index = 0;
 
   /* 从左至右扫描 haystack */
-  for (uint16_t i = 0, j = 0; i < haystack_len; i++) {
-    if (haystack[i] == needle[j]) {
-      j++;
-      if (j == needle_len) {
-        index = i - j + 1;
-        break;
+  while (haystcak_index < haystack_len) {
+    /* 逐字符匹配 */
+    if (haystack[haystcak_index] == needle[needle_index]) {
+      /* 判断是否匹配至子串最后一个字符 */
+      if (needle_index == (needle_len - 1)) {
+        /* 子串全部匹配成功，返回下标 */
+        return (haystcak_index - needle_index);
+      } else {
+        /* 未至子串最后一个字符，继续向右匹配 */
+        haystcak_index++;
+        needle_index++;
       }
     } else {
-      /* 回退至上个相等点后一个元素 */
-      if (j != 0) {
-        i -= j;
+      /**
+       * 遇到失配字符：
+       *  1.当子串索引为零时，主串索引向右移动，子串索引不动；
+       *  2.当子串索引不为零时，主串索引回退至上个相等点后一个元素，然后复位子串索引；
+       */
+      if (needle_index == 0) {
+        haystcak_index++;
+      } else {
+        /* 此处仅 needle_index >=2 时，haystcak_index 值才会更新 */
+        haystcak_index = haystcak_index - needle_index + 1;
+        needle_index   = 0;
       }
-      j = 0;
     }
   }
 
-  return index;
+  /*未找到，返回 -1*/
+  return (-1);
 }
 // @lc code=end
 
-// "hllllelellelllleoleello"\n"lell"\n
+/**
+ * Test case:
+ * "hllllelellelllleoleello"\n"lell"\n
+ */
